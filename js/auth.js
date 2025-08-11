@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'user-dashboard.html';
             }
         } catch (error) {
-            signinError.textContent = firebaseApp.handleFirebaseError(error);
+            signinError.textContent = window.firebaseApp ? firebaseApp.handleFirebaseError(error) : error.message;
         }
     });
     
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'user-dashboard.html';
             }
         } catch (error) {
-            signupError.textContent = firebaseApp.handleFirebaseError(error);
+            signupError.textContent = window.firebaseApp ? firebaseApp.handleFirebaseError(error) : error.message;
         }
     });
     

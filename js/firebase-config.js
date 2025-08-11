@@ -15,7 +15,13 @@ firebase.initializeApp(firebaseConfig);
 // Initialize services
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
+// Only initialize storage if it's available
+let storage = null;
+try {
+    storage = firebase.storage();
+} catch (error) {
+    console.warn('Firebase Storage not initialized:', error);
+}
 
 // Enable offline persistence
 db.enablePersistence()
