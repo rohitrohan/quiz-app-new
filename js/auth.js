@@ -168,6 +168,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    // Google Sign In
+    const googleSignInBtn = document.getElementById('google-signin-btn');
+    googleSignInBtn?.addEventListener('click', async () => {
+        try {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            const result = await auth.signInWithPopup(provider);
+            
+            // Check if user document exists
+            const userDoc = await db.collection('users').doc(result.user.uid).get();
+            
+            if (!userDoc.exists) {
+                // Create user document for new Google users
+                await createUserDocument(result.user, 'student');
+            }
+            
+            // Get user role and redirect
+            const userData = userDoc.exists ? userDoc.data() : { role: 'student' };
+            const role = userData.role || 'student';
+            
+            if (role === 'admin' || role === 'teacher') {
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                window.location.href = 'user-dashboard.html';
+            }
+        } catch (error) {
+            console.error('Google sign in error:', error);
+            const signinError = document.getElementById('signin-error');
+            if (signinError) {
+                signinError.textContent = error.message;
+            }
+        }
+    });
+    
     // Password Reset
     resetForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
