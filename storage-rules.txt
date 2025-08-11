@@ -1,0 +1,87 @@
+// Copy these rules to your Firebase Console -> Storage -> Rules
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return isAuthenticated() && 
+        request.auth.token.role in ['admin', 'teacher'];
+    }
+    
+    // Helper function to check file size (max 5MB)
+    function isValidFileSize() {
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    // Helper function to check image file type
+    function isValidImageType() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    // Test folder - for testing purposes
+    match /test/{userId}/{fileName} {
+      allow read: if isAuthenticated() && 
+        (userId == request.auth.uid || isAdmin());
+      allow write: if isAuthenticated() && 
+        userId == request.auth.uid && 
+        isValidFileSize() && 
+        isValidImageType();
+      allow delete: if isAuthenticated() && 
+        userId == request.auth.uid;
+    }
+    
+    // User profile images
+    match /users/{userId}/profile/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+        userId == request.auth.uid && 
+        isValidFileSize() && 
+        isValidImageType();
+      allow delete: if isAuthenticated() && 
+        (userId == request.auth.uid || isAdmin());
+    }
+    
+    // Quiz images (questions, options, etc.)
+    match /quizzes/{quizId}/images/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+        isAdmin() && 
+        isValidFileSize() && 
+        isValidImageType();
+      allow delete: if isAdmin();
+    }
+    
+    // Quiz attachments (PDFs, documents)
+    match /quizzes/{quizId}/attachments/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && 
+        isAdmin() && 
+        isValidFileSize();
+      allow delete: if isAdmin();
+    }
+    
+    // Results/certificates
+    match /results/{userId}/certificates/{fileName} {
+      allow read: if isAuthenticated() && 
+        (userId == request.auth.uid || isAdmin());
+      allow write: if isAuthenticated() && 
+        isAdmin() && 
+        isValidFileSize();
+      allow delete: if isAdmin();
+    }
+    
+    // Temporary uploads (auto-deleted after processing)
+    match /temp/{sessionId}/{fileName} {
+      allow read, write: if isAuthenticated() && 
+        isValidFileSize();
+      allow delete: if isAuthenticated();
+    }
+  }
+}

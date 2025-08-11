@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster - Student Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/user.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>QuizMaster</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="overview">
+                    <span>📊</span> Overview
+                </a>
+                <a href="#" class="nav-item" data-page="quizzes">
+                    <span>📝</span> Available Quizzes
+                </a>
+                <a href="#" class="nav-item" data-page="history">
+                    <span>📈</span> Quiz History
+                </a>
+                <a href="#" class="nav-item" data-page="profile">
+                    <span>👤</span> Profile
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-secondary btn-block">Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Welcome back, <span id="user-name">Student</span>!</h1>
+                    <p id="current-date"></p>
+                </div>
+                <div class="header-actions">
+                    <button id="notification-btn" class="icon-btn">🔔</button>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <section id="overview-section" class="content-section">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-content">
+                            <h3>Total Quizzes</h3>
+                            <p class="stat-value" id="total-quizzes">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <h3>Average Score</h3>
+                            <p class="stat-value" id="avg-score">0%</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <h3>Time Spent</h3>
+                            <p class="stat-value" id="time-spent">0h</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-content">
+                            <h3>Current Streak</h3>
+                            <p class="stat-value" id="streak">0 days</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Section -->
+                <div id="resume-section" class="card" style="display: none;">
+                    <h2>Resume Quiz</h2>
+                    <div id="resume-quiz-info"></div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <h2>Recent Activity</h2>
+                    <div id="recent-activity" class="activity-list">
+                        <p class="empty-state">No recent activity</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Available Quizzes Section -->
+            <section id="quizzes-section" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Available Quizzes</h2>
+                    <div class="filter-controls">
+                        <select id="category-filter">
+                            <option value="">All Categories</option>
+                            <option value="science">Science</option>
+                            <option value="math">Mathematics</option>
+                            <option value="history">History</option>
+                            <option value="general">General Knowledge</option>
+                        </select>
+                        <select id="difficulty-filter">
+                            <option value="">All Difficulties</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="quiz-grid" class="quiz-grid">
+                    <p class="empty-state">Loading quizzes...</p>
+                </div>
+            </section>
+
+            <!-- Quiz History Section -->
+            <section id="history-section" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Quiz History</h2>
+                    <button id="export-history" class="btn btn-secondary">Export to CSV</button>
+                </div>
+                <div class="card">
+                    <table id="history-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Quiz Title</th>
+                                <th>Score</th>
+                                <th>Time Spent</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody">
+                            <tr>
+                                <td colspan="5" class="empty-state">No quiz history yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile-section" class="content-section" style="display: none;">
+                <div class="card">
+                    <h2>Profile Settings</h2>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label for="profile-name">Full Name</label>
+                            <input type="text" id="profile-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-email">Email</label>
+                            <input type="email" id="profile-email" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-role">Role</label>
+                            <input type="text" id="profile-role" readonly>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/user.js"></script>
+</body>
+</html>

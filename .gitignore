@@ -1,0 +1,151 @@
+# Dependencies
+node_modules/
+bower_components/
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
+
+# Environment variables and secrets
+.env
+.env.local
+.env.production
+.env.development
+
+# API Keys - IMPORTANT: Never commit API keys
+api/gemini-config.js
+**/api-keys.js
+**/secrets.js
+config/firebase-keys.js
+
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+firestore.rules
+firestore.indexes.json
+storage.rules
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+test-results/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.cache/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+
+# Backup files
+*.backup
+*.bak
+*.old
+
+# Local development
+local/
+scratch/
+temp/
+
+# Documentation build
+docs/_build/
+docs/.doctrees/
+
+# Python (if using any Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# Security - Test files that might contain real data
+test-firebase.html
+test-data/
+sample-data/
+
+# Uploaded files (if stored locally)
+uploads/
+user-uploads/
+
+# Session data
+sessions/
+.sessions/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Certificates (except samples)
+*.pem
+*.key
+*.crt
+*.cer
+!sample-cert.pem
+
+# Archive files
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+
+# Media files (if not part of the app)
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+
+# Large files
+*.pdf
+!sample.pdf
+*.psd
+*.ai
+
+# Custom ignores for this project
+quiz-exports/
+backup-data/
+private-notes.md
+TODO-private.md

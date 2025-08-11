@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Editor - QuizMaster</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .editor-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .editor-header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .editor-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .quiz-form {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .question-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .question-number {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-delete {
+            background: #ff4757;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #ff3838;
+        }
+        
+        .btn-duplicate {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-duplicate:hover {
+            background: #5a67d8;
+        }
+        
+        .options-container {
+            margin-top: 15px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .option-item input[type="radio"] {
+            width: auto;
+        }
+        
+        .option-item input[type="text"] {
+            flex: 1;
+        }
+        
+        .btn-add-option {
+            background: #4834d4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .btn-add-question {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 20px auto;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+        
+        .btn-save,
+        .btn-publish,
+        .btn-preview,
+        .btn-cancel {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-save {
+            background: #f0f3f7;
+            color: #333;
+        }
+        
+        .btn-publish {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-preview {
+            background: #48dbfb;
+            color: white;
+        }
+        
+        .btn-cancel {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .image-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .image-upload:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px auto;
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .editor-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <div class="editor-header">
+            <h1 class="editor-title">
+                <span id="edit-mode">Create New Quiz</span>
+            </h1>
+            <p>Design engaging quizzes with multiple question types</p>
+        </div>
+
+        <form class="quiz-form" id="quiz-form">
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h2 class="section-title">Basic Information</h2>
+                
+                <div class="form-group">
+                    <label for="quiz-title">Quiz Title *</label>
+                    <input type="text" id="quiz-title" required placeholder="Enter quiz title">
+                </div>
+                
+                <div class="form-group">
+                    <label for="quiz-description">Description</label>
+                    <textarea id="quiz-description" rows="3" placeholder="Brief description of the quiz"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quiz-category">Category *</label>
+                        <select id="quiz-category" required>
+                            <option value="">Select Category</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Science">Science</option>
+                            <option value="Programming">Programming</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Literature">Literature</option>
+                            <option value="General Knowledge">General Knowledge</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quiz-difficulty">Difficulty Level *</label>
+                        <select id="quiz-difficulty" required>
+                            <option value="">Select Difficulty</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quiz-duration">Time Limit (minutes)</label>
+                        <input type="number" id="quiz-duration" min="1" max="180" placeholder="e.g., 30">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quiz-passing-score">Passing Score (%)</label>
+                        <input type="number" id="quiz-passing-score" min="0" max="100" value="60" placeholder="e.g., 60">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions Section -->
+            <div class="form-section">
+                <h2 class="section-title">Questions</h2>
+                
+                <div id="questions-container">
+                    <!-- Questions will be added here dynamically -->
+                </div>
+                
+                <button type="button" class="btn-add-question" id="add-question-btn">
+                    <span>+</span> Add Question
+                </button>
+            </div>
+
+            <!-- Settings -->
+            <div class="form-section">
+                <h2 class="section-title">Quiz Settings</h2>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="quiz-shuffle-questions"> 
+                        Shuffle questions for each attempt
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="quiz-shuffle-options"> 
+                        Shuffle answer options
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="quiz-show-answers" checked> 
+                        Show correct answers after submission
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="quiz-allow-review" checked> 
+                        Allow students to review their answers
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="quiz-active" checked> 
+                        Make quiz active (visible to students)
+                    </label>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="button" class="btn-cancel" onclick="window.location.href='admin-dashboard.html'">Cancel</button>
+                <button type="button" class="btn-save" id="save-draft-btn">Save as Draft</button>
+                <button type="button" class="btn-preview" id="preview-btn">Preview</button>
+                <button type="submit" class="btn-publish">Publish Quiz</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="api/gemini-config.js"></script>
+    <script src="js/quiz-generator.js"></script>
+    <script src="js/quiz-editor.js"></script>
+</body>
+</html>

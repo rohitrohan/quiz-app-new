@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster - Sign In / Sign Up</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>QuizMaster</h1>
+                <p id="auth-subtitle">Sign in to continue</p>
+            </div>
+
+            <!-- Sign In Form -->
+            <form id="signin-form" class="auth-form">
+                <div class="form-group">
+                    <label for="signin-email">Email</label>
+                    <input type="email" id="signin-email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="signin-password">Password</label>
+                    <input type="password" id="signin-password" required placeholder="Enter your password">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember-me">
+                        Remember me
+                    </label>
+                </div>
+                <div id="signin-error" class="error-message"></div>
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                <div class="divider">OR</div>
+                <button type="button" id="google-signin" class="btn btn-google btn-block">
+                    Sign in with Google
+                </button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signup-form" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required placeholder="Create a password">
+                    <small>Password must be at least 6 characters</small>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" required placeholder="Confirm your password">
+                </div>
+                <div class="form-group">
+                    <label for="user-role">I am a:</label>
+                    <select id="user-role" required>
+                        <option value="student">Student</option>
+                        <option value="admin">Teacher/Admin</option>
+                    </select>
+                </div>
+                <div id="signup-error" class="error-message"></div>
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                <div class="divider">OR</div>
+                <button type="button" id="google-signup" class="btn btn-google btn-block">
+                    Sign up with Google
+                </button>
+            </form>
+
+            <!-- Password Reset Form -->
+            <form id="reset-form" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="reset-email">Email</label>
+                    <input type="email" id="reset-email" required placeholder="Enter your email">
+                    <small>We'll send you a password reset link</small>
+                </div>
+                <div id="reset-error" class="error-message"></div>
+                <div id="reset-success" class="success-message"></div>
+                <button type="submit" class="btn btn-primary btn-block">Send Reset Link</button>
+            </form>
+
+            <!-- Form Toggle Links -->
+            <div class="auth-footer">
+                <p id="toggle-signup" class="toggle-link">
+                    Don't have an account? <a href="#" id="show-signup">Sign up</a>
+                </p>
+                <p id="toggle-signin" class="toggle-link" style="display: none;">
+                    Already have an account? <a href="#" id="show-signin">Sign in</a>
+                </p>
+                <p id="toggle-reset" class="toggle-link">
+                    <a href="#" id="show-reset">Forgot password?</a>
+                </p>
+                <p id="back-to-signin" class="toggle-link" style="display: none;">
+                    <a href="#" id="back-signin">Back to Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>QuizMaster Admin</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="overview">
+                    <span>📊</span> Overview
+                </a>
+                <a href="#" class="nav-item" data-page="users">
+                    <span>👥</span> Users
+                </a>
+                <a href="#" class="nav-item" data-page="quizzes">
+                    <span>📝</span> Quizzes
+                </a>
+                <a href="#" class="nav-item" data-page="assignments">
+                    <span>📋</span> Assignments
+                </a>
+                <a href="#" class="nav-item" data-page="analytics">
+                    <span>📈</span> Analytics
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-secondary btn-block">Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Admin Dashboard</h1>
+                    <p id="current-date"></p>
+                </div>
+                <div class="header-actions">
+                    <button id="notification-btn" class="icon-btn">🔔</button>
+                    <button id="settings-btn" class="icon-btn">⚙️</button>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <section id="overview-section" class="content-section">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <h3>Total Users</h3>
+                            <p class="stat-value" id="total-users">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-content">
+                            <h3>Total Quizzes</h3>
+                            <p class="stat-value" id="total-quizzes">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <h3>Avg Score</h3>
+                            <p class="stat-value" id="avg-score">0%</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-content">
+                            <h3>Active Assignments</h3>
+                            <p class="stat-value" id="active-assignments">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <h2>Recent Activity</h2>
+                    <div id="recent-activity" class="activity-list">
+                        <p class="empty-state">No recent activity</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users-section" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>User Management</h2>
+                    <div class="header-controls">
+                        <input type="search" id="user-search" placeholder="Search users...">
+                        <button id="add-user-btn" class="btn btn-primary">Add User</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <table id="users-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Quizzes Taken</th>
+                                <th>Avg Score</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                            <tr>
+                                <td colspan="6" class="empty-state">Loading users...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Quizzes Section -->
+            <section id="quizzes-section" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Quiz Management</h2>
+                    <button id="create-quiz-btn" class="btn btn-primary">Create New Quiz</button>
+                </div>
+                <div id="quiz-list" class="quiz-admin-grid">
+                    <p class="empty-state">Loading quizzes...</p>
+                </div>
+            </section>
+
+            <!-- Assignments Section -->
+            <section id="assignments-section" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Assignment Tracking</h2>
+                    <button id="new-assignment-btn" class="btn btn-primary">New Assignment</button>
+                </div>
+                
+                <!-- Assignment Overview -->
+                <div class="assignment-overview">
+                    <div class="overview-card">
+                        <h3>Pending</h3>
+                        <p class="overview-value" id="pending-count">0</p>
+                    </div>
+                    <div class="overview-card alert">
+                        <h3>Overdue</h3>
+                        <p class="overview-value" id="overdue-count">0</p>
+                    </div>
+                    <div class="overview-card">
+                        <h3>Due Today</h3>
+                        <p class="overview-value" id="today-count">0</p>
+                    </div>
+                    <div class="overview-card">
+                        <h3>This Week</h3>
+                        <p class="overview-value" id="week-count">0</p>
+                    </div>
+                </div>
+
+                <!-- Assignments Table -->
+                <div class="card">
+                    <table id="assignments-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Quiz</th>
+                                <th>Assigned To</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Completion</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignments-tbody">
+                            <tr>
+                                <td colspan="6" class="empty-state">No assignments yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Analytics & Reports</h2>
+                    <button id="export-report-btn" class="btn btn-secondary">Export Report</button>
+                </div>
+                <div class="analytics-grid">
+                    <div class="card">
+                        <h3>Performance Trends</h3>
+                        <canvas id="performance-chart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3>Category Distribution</h3>
+                        <canvas id="category-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

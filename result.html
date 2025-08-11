@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results - QuizMaster</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .result-container {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        
+        .score-circle svg {
+            transform: rotate(-90deg);
+        }
+        
+        .score-circle-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 15;
+        }
+        
+        .score-circle-progress {
+            fill: none;
+            stroke-width: 15;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        
+        .score-circle-progress.excellent {
+            stroke: #4CAF50;
+        }
+        
+        .score-circle-progress.good {
+            stroke: #2196F3;
+        }
+        
+        .score-circle-progress.average {
+            stroke: #FF9800;
+        }
+        
+        .score-circle-progress.poor {
+            stroke: #f44336;
+        }
+        
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .score-percentage {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .score-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .result-status {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .result-status.passed {
+            color: #4CAF50;
+        }
+        
+        .result-status.failed {
+            color: #f44336;
+        }
+        
+        .result-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .answers-review {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .review-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .question-review {
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question-review.correct {
+            border-left-color: #4CAF50;
+        }
+        
+        .question-review.incorrect {
+            border-left-color: #f44336;
+        }
+        
+        .question-review.partial {
+            border-left-color: #FF9800;
+        }
+        
+        .question-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .answer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .answer-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .answer-label {
+            font-weight: 500;
+            color: #666;
+            min-width: 100px;
+        }
+        
+        .answer-value {
+            flex: 1;
+        }
+        
+        .correct-answer {
+            color: #4CAF50;
+            font-weight: 500;
+        }
+        
+        .incorrect-answer {
+            color: #f44336;
+            text-decoration: line-through;
+        }
+        
+        .explanation-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            border-left: 3px solid #2196F3;
+        }
+        
+        .explanation-label {
+            font-weight: bold;
+            color: #1976D2;
+            margin-bottom: 5px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+        }
+        
+        .certificate-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .certificate-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .certificate-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .certificate-message {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .result-header {
+                padding: 30px 20px;
+            }
+            
+            .score-circle {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .score-percentage {
+                font-size: 36px;
+            }
+            
+            .result-status {
+                font-size: 24px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <!-- Result Header -->
+        <div class="result-header">
+            <div class="score-circle">
+                <svg width="200" height="200">
+                    <circle cx="100" cy="100" r="90" class="score-circle-bg"></circle>
+                    <circle cx="100" cy="100" r="90" class="score-circle-progress" 
+                            stroke-dasharray="565.48" stroke-dashoffset="565.48"></circle>
+                </svg>
+                <div class="score-text">
+                    <div class="score-percentage">0%</div>
+                    <div class="score-label">Score</div>
+                </div>
+            </div>
+            
+            <div class="result-status">Loading...</div>
+            <div class="result-message"></div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="correct-answers">0</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="incorrect-answers">0</div>
+                    <div class="stat-label">Incorrect</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="time-taken">0:00</div>
+                    <div class="stat-label">Time Taken</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="points-earned">0</div>
+                    <div class="stat-label">Points</div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="user-dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+                <button id="retake-btn" class="btn btn-primary">Retake Quiz</button>
+                <button id="download-btn" class="btn btn-success">Download Certificate</button>
+            </div>
+        </div>
+
+        <!-- Answers Review Section -->
+        <div class="answers-review" id="answers-review" style="display: none;">
+            <h2 class="review-header">Review Your Answers</h2>
+            <div id="questions-review-container">
+                <!-- Questions will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Certificate Section -->
+        <div class="certificate-section" id="certificate-section" style="display: none;">
+            <div class="certificate-icon">🏆</div>
+            <h2 class="certificate-title">Congratulations!</h2>
+            <p class="certificate-message">You've earned a certificate of completion</p>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    
+    <!-- jsPDF for certificate generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/result.js"></script>
+</body>
+</html>

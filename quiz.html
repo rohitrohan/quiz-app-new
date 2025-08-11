@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster - Quiz Session</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/quiz.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Quiz Header -->
+        <header class="quiz-header">
+            <div class="quiz-info">
+                <h2 id="quiz-title">Loading Quiz...</h2>
+                <div class="quiz-meta">
+                    <span id="question-counter">Question 1 of 10</span>
+                    <span id="timer">00:00</span>
+                </div>
+            </div>
+            <div class="quiz-controls">
+                <button id="pause-btn" class="btn btn-secondary">Pause</button>
+                <button id="exit-btn" class="btn btn-danger">Exit Quiz</button>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill"></div>
+        </div>
+
+        <!-- Quiz Content -->
+        <main class="quiz-content">
+            <!-- Question Section -->
+            <div class="question-section">
+                <div id="question-visual" class="question-visual" style="display: none;">
+                    <!-- Visual content (image/SVG) will be inserted here -->
+                </div>
+                <h3 id="question-text" class="question-text">Loading question...</h3>
+                <div id="question-hint" class="question-hint" style="display: none;">
+                    <p class="hint-label">💡 Hint:</p>
+                    <p id="hint-text"></p>
+                </div>
+            </div>
+
+            <!-- Answer Section -->
+            <div id="answer-section" class="answer-section">
+                <!-- Dynamic answer inputs based on question type -->
+            </div>
+
+            <!-- Explanation Section (shown after answering) -->
+            <div id="explanation-section" class="explanation-section" style="display: none;">
+                <h4>Explanation</h4>
+                <div id="explanation-content"></div>
+            </div>
+        </main>
+
+        <!-- Quiz Footer -->
+        <footer class="quiz-footer">
+            <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
+            <button id="hint-btn" class="btn btn-secondary">Show Hint</button>
+            <button id="next-btn" class="btn btn-primary">Next</button>
+            <button id="submit-btn" class="btn btn-success" style="display: none;">Submit Quiz</button>
+        </footer>
+    </div>
+
+    <!-- Pause Modal -->
+    <div id="pause-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Quiz Paused</h2>
+            <p>Your progress has been saved. You can resume anytime.</p>
+            <div class="modal-actions">
+                <button id="resume-btn" class="btn btn-primary">Resume</button>
+                <button id="save-exit-btn" class="btn btn-secondary">Save & Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/quiz.js"></script>
+</body>
+</html>

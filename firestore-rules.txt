@@ -1,0 +1,126 @@
+// Copy these rules to your Firebase Console -> Firestore Database -> Rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is admin or teacher
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'teacher'];
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users collection rules
+    match /users/{userId} {
+      // Users can only read their own document
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Users can only update their own document (but not the role field)
+      allow update: if isOwner(userId) && 
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
+      
+      // Only admins can create new users or delete users
+      allow create: if isAdmin() || 
+        (isAuthenticated() && request.auth.uid == userId);
+      allow delete: if isAdmin();
+    }
+    
+    // Quizzes collection rules
+    match /quizzes/{quizId} {
+      // All authenticated users can read quizzes that are either:
+      // - active (isActive == true)
+      // - don't have isActive field (backwards compatibility)
+      // - created by them
+      // - they are admin
+      allow read: if isAuthenticated() && 
+        (!("isActive" in resource.data) || 
+         resource.data.isActive == true || 
+         resource.data.createdBy == request.auth.uid ||
+         isAdmin());
+      
+      // Only admins/teachers can create quizzes
+      allow create: if isAdmin();
+      
+      // Only admins or the quiz creator can update
+      allow update: if isAdmin() || 
+        (isAuthenticated() && resource.data.createdBy == request.auth.uid);
+      
+      // Only admins can delete quizzes
+      allow delete: if isAdmin();
+    }
+    
+    // Sessions collection rules
+    match /sessions/{sessionId} {
+      // Users can only read their own sessions, admins can read all
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Users can create their own sessions
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own sessions
+      allow update: if isAuthenticated() && 
+        resource.data.userId == request.auth.uid;
+      
+      // Only allow deletion by owner or admin
+      allow delete: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isAdmin());
+    }
+    
+    // Assignments collection rules
+    match /assignments/{assignmentId} {
+      // Users can read their own assignments, admins can read all
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Only admins can create assignments
+      allow create: if isAdmin();
+      
+      // Admins can update any assignment, users can only update status
+      allow update: if isAdmin() || 
+        (resource.data.userId == request.auth.uid && 
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'completedAt']));
+      
+      // Only admins can delete assignments
+      allow delete: if isAdmin();
+    }
+    
+    // Results collection rules
+    match /results/{resultId} {
+      // Users can read their own results, admins can read all
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Results can be created by the user who took the quiz
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Results cannot be updated once created (immutable)
+      allow update: if false;
+      
+      // Only admins can delete results
+      allow delete: if isAdmin();
+    }
+    
+    // Questions collection rules (if storing separately)
+    match /questions/{questionId} {
+      // All authenticated users can read questions
+      allow read: if isAuthenticated();
+      
+      // Only admins can manage questions
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,15 @@
+// SIMPLE STORAGE RULES - For Testing
+// Copy these to Firebase Console -> Storage -> Rules
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow authenticated users to read/write their own files
+    match /{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+        && request.resource.size < 5 * 1024 * 1024; // 5MB limit
+      allow delete: if request.auth != null;
+    }
+  }
+}
