@@ -1,4 +1,6 @@
 // Firebase Configuration
+// NOTE: These keys are meant to be public. Security is enforced via Firebase Security Rules.
+// See: https://firebase.google.com/docs/projects/api-keys
 const firebaseConfig = {
     apiKey: "AIzaSyDwLwcagZOFXJ_CvV5myv9pFGQCuCg8WcU",
     authDomain: "quiz-app-6a1f3.firebaseapp.com",
